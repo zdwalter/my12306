@@ -75,7 +75,7 @@ my12306.isLogin =  function(data, callback) {
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         line = _ref[_i];
         if (line.match(/var.*message/) || line.match(/var.*isLogin/)) {
-            console.log(line);
+            //console.log(line);
             useful_lines.push(line);
         }
     }
@@ -174,7 +174,7 @@ my12306.isLogin =  function(data, callback) {
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         line = _ref[_i];
         if (line.match(/var.*message/) || line.match(/var.*isLogin/)) {
-            console.log(line);
+            //console.log(line);
             useful_lines.push(line);
         }
     }
