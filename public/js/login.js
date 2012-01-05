@@ -128,7 +128,7 @@ my12306.login = function() {
                     };
                     setTimeout(redirect, 3000);
                     $.ajax({url: host+'success'});
-                    alert('登陆成功(调转后，点击网页右上角我的12306进行操作)');
+                    alert('登陆成功(跳转后，点击网页右上角"我的12306"开始购票)');
                 } else {
                     retry = function() {
                         return my12306.login();
