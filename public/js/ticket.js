@@ -71,15 +71,14 @@ my12306.initWidget = function() {
     html += '<p>车次</p>'
     html += '<input id="traincode" value="'+localStorage.getItem('traincode') +'"/>'
     html += '</div>'
-    html += '<p><div id="note"></div></p>'
-    html += '<button onclick="javascript:window.my12306.tickets()" class="ui-btn-inner">查询余票</button></div>'
+    //html += '<button onclick="javascript:window.my12306.tickets()" class="ui-btn-inner">查询余票</button></div>'
     html += '<p>验证码</p>'
     html += '<input id="randCode"/>'
     html += '<img src="https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=randp") />'
     html += '<p>联系人</p>'
     html += '<input id="name" value="'+localStorage.getItem('name') +'"/>'
-    html += '<p><div id="note_order"></div></p>'
-    html += '<button onclick="javascript:window.my12306.order()" class="ui-btn-inner">购买</button></div>'
+    html += '<p><div id="note"></div></p>'
+    html += '<button onclick="javascript:window.my12306.tickets()" class="ui-btn-inner">购买</button></div>'
 
     widget.innerHTML = html;
     d.body.appendChild(widget);
@@ -272,6 +271,7 @@ my12306.ticket_confirm = function(ticket, callback) {
             my12306.html = html;
             my12306.ticket = ticket;
             //alert('成功。输入验证码和姓名后点击购买');
+            my12306.order()
           }
         });
       };
@@ -328,13 +328,14 @@ my12306.order = function() {
                         for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
                             line = _ref[_j];
                             if (line.match(/var.*message/) || line.match(/var.*isLogin/)) {
-                                console.log(line);
+                                //console.log(line);
                                 useful_lines.push(line);
                             }
                         }
                         if (useful_lines.length === 0) return window.my12306.tickets();
                         eval(useful_lines.join('\n'));
                         if (message.length || messageShow.length) {
+                            $('#note').html(message+messageShow);
                             return window.my12306.tickets();
                         }
                         return alert('购票成功，赶紧付款');}
