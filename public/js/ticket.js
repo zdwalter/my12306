@@ -314,7 +314,7 @@ my12306.order = function() {
            error: function() {
                return window.my12306.error(url_12306.ticket_confirm, callback);
            }, 
-           success: function(html) {
+           success: function(data) {
                         var line, useful_lines, _j, _len2, _ref;
                         useful_lines = [];
                         _ref = data.split('\n');
