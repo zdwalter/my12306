@@ -49,9 +49,9 @@ my12306.initWidget = function() {
     html += '<div id="login">'
     html += '<div id="form">'
     html += '<p>用户名</p>'
-    html += '<input id="username"/>'
+    html += '<input id="username" value="'+localStorage.getItem('username') +'"/>'
     html += '<p>密码</p>'
-    html += '<input id="password" type="password"/>'
+    html += '<input id="password" type="password" value="'+localStorage.getItem('password') +'"/>'
     html += '<p>验证码</p>'
     html += '<input id="randCode"/>'
     html += '<img src="https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=lrand"/>'
@@ -88,7 +88,9 @@ my12306.isLogin =  function(data, callback) {
 
 my12306.login = function() {
     var username = $('#username').val();
+    localStorage.setItem('username', username);
     var password = $('#password').val();
+    localStorage.setItem('password', password);
     var randCode = $('#randCode').val();
     var note = $('#note');
     note.html('正在登陆')

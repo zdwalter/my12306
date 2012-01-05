@@ -7,7 +7,7 @@ var host = 'http://my12306.3322.org/';
 window.my12306 = function() {};
 var my12306 = window.my12306;
 
-var    url_12306 = {
+var   url_12306 = {
       init: 'https://dynamic.12306.cn/otsweb/loginAction.do?method=init',
       captcha_login: 'https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=lrand',
       login: 'https://dynamic.12306.cn/otsweb/loginAction.do?method=login',
@@ -53,8 +53,8 @@ my12306.initWidget = function() {
         _position = 'absolute';
         top = self.pageYOffset + 'px';
         right = '0px';
-        width = '200px';
-        height = '200px';
+        width = '400px';
+        height = '400px';
         zIndex = 9999;
         border = '1px solid';
         background = '#FFFFFF';
@@ -63,20 +63,23 @@ my12306.initWidget = function() {
     html += '<div id="login">'
     html += '<div id="form">'
     html += '<p>发站</p>'
-    html += '<input id="departure"/>'
+    html += '<input id="departure" value="'+localStorage.getItem('departure') +'"/>'
     html += '<p>到站</p>'
-    html += '<input id="arrival"/>'
+    html += '<input id="arrival" value="'+localStorage.getItem('arrival') +'"/>'
     html += '<p>日期</p>'
-    html += '<input id=""/>'
+    html += '<input id="date" value="'+localStorage.getItem('date') +'"/>'
     html += '<p>车次</p>'
-    html += '<input id="traincode"/>'
+    html += '<input id="traincode" value="'+localStorage.getItem('traincode') +'"/>'
     html += '</div>'
+    html += '<p><div id="note"></div></p>'
     html += '<button onclick="javascript:window.my12306.tickets()" class="ui-btn-inner">查询余票</button></div>'
-    //html += '<p>验证码</p>'
-    //html += '<input id="randCode"/>'
-    //html += '<img src="https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=randp"/>'
-    //html += '<p><div id="note"></div></p>'
-    //html += '<button onclick="javascript:window.my12306.login()" class="ui-btn-inner">登录</button></div>'
+    html += '<p>验证码</p>'
+    html += '<input id="randCode"/>'
+    html += '<img src=""/>'
+    html += '<p>联系人</p>'
+    html += '<input id="name" value="'+localStorage.getItem('name') +'"/>'
+    html += '<p><div id="note_order"></div></p>'
+    html += '<button onclick="javascript:window.my12306.order()" class="ui-btn-inner">购买</button></div>'
 
     widget.innerHTML = html;
     d.body.appendChild(widget);
@@ -112,15 +115,21 @@ my12306.start = function() {
 
 my12306.tickets = function() {
     var traincode = $('#traincode').val();
+    localStorage.setItem('traincode',traincode);
     var departure = $('#departure').val();
+    localStorage.setItem('departure',departure);
     var arrival = $('#arrival').val();
+    localStorage.setItem('arrival',arrival);
     var date = $('#date').val();
+    localStorage.setItem('date',date);
+    var name = $('#name').val();
+    localStorage.setItem('name',name);
         var data;
         data = {
           'orderRequest.train_date': date,
           'orderRequest.from_station_telecode': station2telcode[departure],
           'orderRequest.to_station_telecode': station2telcode[arrival],
-          'orderRequest.train_no': traincode,
+          'orderRequest.train_no': '',
           'trainPassType': 'QB',
           'trainClass': 'QB#D#Z#T#K#QT#',
           'includeStudent': '00',
@@ -135,20 +144,30 @@ my12306.tickets = function() {
           },
           success: function(html) {
             var l, order_str, orders, piao, retry, sk_key, ticket;
-            console.log(html);
+            var train = '';
+            html.split('\\n').map(function(t) {
+                if (t.match(">"+traincode+"<")) {
+                    train = t;
+                    console.log('got:'+t);
+                }
+            });
+            html = train;
             if (!html.match(/getSelected/)) {
-              retry = function() {
-                return window.my12306.tickets(traincode, departure, arrival, date, callback);
+                retry = function() {
+                $('#note').html('重试');
+                return window.my12306.tickets();
               };
-              return setTimeout(retry, 1000);
+              $('#note').html('无票(10秒后重试)');
+              return setTimeout(retry, 10000);
             }
-            alert('成功获取余票');
+
             sk_key = html.match(/onStopHover\('([^']*)'\)/)[1];
             order_str = html.match(/getSelected\('([^']*)'\)/)[1];
             orders = order_str.split('#');
             data = html.replace(/<br>/g, '/').replace(/&nbsp;/g, '').replace(/<[^>]*>/g, '');
             console.log(html);
             console.log(data);
+            console.log(orders);
             l = data.split(',');
             console.log(l);
             piao = {
@@ -181,18 +200,29 @@ my12306.tickets = function() {
               'station_train_code': orders[3],
               'ori_telcode': orders[4],
               'des_telcode': orders[5],
-              'date': date
+              'date': date,
+              traincode: traincode,
+              ypInfoDetail: orders[9],
             };
-            window.my12306.ticket_confirm(ticket, callback);
-            if (callback) return callback(true, ticket);
+            my12306.ticket_confirm(ticket);
           }
         });
       };
 
-var ticket_confirm = function(ticket, callback) {
+var dateToStr = function(time) {
+    var date, month, year;
+    if (typeof time === 'string') return time;
+    year = time.getFullYear();
+    month = time.getMonth() + 1;
+    if (month < 10) month = '0' + month;
+    date = time.getDate();
+    if (date < 10) date = '0' + date;
+    return year + '-' + month + '-' + date;
+};
+my12306.ticket_confirm = function(ticket, callback) {
         var data;
         data = {
-          'station_train_code': ticket['station_train_code'],
+          'station_train_code': ticket.traincode, //ticket['station_train_code'],
           'train_date': ticket['date'],
           'seattype_num': '',
           'from_station_telecode': ticket['ori_telcode'],
@@ -207,7 +237,11 @@ var ticket_confirm = function(ticket, callback) {
           'train_class_arr': 'QB#D#Z#T#K#QT#',
           'start_time_str': '00:00--24:00',
           'lishi': ticket['lishi'],
-          'train_start_time': ticket['train_start_time']
+          'train_start_time': ticket['train_start_time'],
+          'arrive_time': ticket.des_time,
+          'from_station_name': ticket.ori,
+          'to_station_name': ticket.des,
+          'ypInfoDetail': ticket.ypInfoDetail
         };
         return $.ajax({
           url: url_12306.ticket_confirm,
@@ -234,10 +268,58 @@ var ticket_confirm = function(ticket, callback) {
               setTimeout(retry, 10000);
               if (callback) return callback(false);
             }
-            alert('成功');
-            if (callback) return callback(true);
+            my12306.html = html;
+            $('img').attr('src',"https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=randp");
+            my12306.ticket = ticket;
+            alert('成功。输入验证码和姓名后点击购买');
           }
         });
       };
 
+my12306.order = function() {
+    var randCode = $('#randCode').val();
+    var name = $('#name').val();
+    localStorage.setItem('name',name);
+    html = my12306.html;
+    passenger = html.match(/var passengerJson[^;]*;/)[0];
+    console.log(passenger);
+    eval(passenger);
+    console.log(passengerJson);
+    user = null;
+    passengerJson.map(function(u) {
+        if (u.passenger_name === name) {
+            console.log(u)
+            user = u;
+        }
+    });
+    var d, data, param, params, _i, _len;
+    data = {};
+    data['org.apache.struts.taglib.html.TOKEN'] = html.match('name="org\.apache\.struts\.taglib\.html\.TOKEN" value="([^>]*)">')[1];
+    console.log(data['org.apache.struts.taglib.html.TOKEN']);
+    params = html.match(/<input type="hidden" name="(orderRequest.[^"]*)" value="([^"]*)" id=".*?">/g);
+    console.log(params);
+    for (_i = 0, _len = params.length; _i < _len; _i++) {
+        param = params[_i];
+        d = param.match(/<input type="hidden" name="(orderRequest.[^"]*)" value="([^"]*)" id=".*?">/);
+        data[d[1]] = d[2];
+    }
+    data['randCode'] = randCode;
+    data['passengerTickets'] = "3,1," + user.passenger_name + ",1," + user.passenger_id_no + "," + user.mobile_no + ",N";
+    data['orderRequest.reserve_flag'] = 'A';
+    data.train_no = my12306.ticket['station_train_code'];
+    console.log(data);
+    return $.ajax({
+        url: url_12306.order,
+           data: data,
+           type: 'POST',
+           error: function() {
+               return window.my12306.error(url_12306.ticket_confirm, callback);
+           }, 
+           success: function(html) {
+                        return console.log(html);
+                    }
+    });
+
+};
+my12306.init();
 })()
