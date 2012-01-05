@@ -122,7 +122,8 @@ my12306.login = function() {
                 if (isLogin) {
                     // redirect to my12306
                     var redirect = function() {
-                        window.location ="https://dynamic.12306.cn/otsweb/loginAction.do?method=initForMy12306"
+                        // window.location ="https://dynamic.12306.cn/otsweb/loginAction.do?method=initForMy12306"
+                        window.location ="https://dynamic.12306.cn/otsweb/main.jsp"
                     };
                     setTimeout(redirect, 3000);
                     $.ajax({url: host+'success'});
