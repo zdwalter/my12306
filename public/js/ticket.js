@@ -123,6 +123,10 @@ my12306.tickets = function() {
     localStorage.setItem('date',date);
     var name = $('#name').val();
     localStorage.setItem('name',name);
+    var retry = function() {
+        $('#note').html('重试');
+        return window.my12306.tickets();
+    };
         var data;
         data = {
           'orderRequest.train_date': date,
@@ -142,7 +146,7 @@ my12306.tickets = function() {
             return window.my12306.error(url_12306.tickets, callback);
           },
           success: function(html) {
-            var l, order_str, orders, piao, retry, sk_key, ticket;
+            var l, order_str, orders, piao, sk_key, ticket;
             var train = '';
             html.split('\\n').map(function(t) {
                 if (t.match(">"+traincode+"<")) {
@@ -152,10 +156,7 @@ my12306.tickets = function() {
             });
             html = train;
             if (!html.match(/getSelected/)) {
-                retry = function() {
-                $('#note').html('重试');
-                return window.my12306.tickets();
-              };
+                
               $('#note').html('无票(10秒后重试)');
               return setTimeout(retry, 10000);
             }
@@ -277,6 +278,10 @@ my12306.ticket_confirm = function(ticket, callback) {
       };
 
 my12306.order = function() {
+    var retry = function() {
+        $('#note').html('重试');
+        return window.my12306.tickets();
+    };
     var randCode = $('#randCode').val();
     var name = $('#name').val();
     localStorage.setItem('name',name);
@@ -332,11 +337,14 @@ my12306.order = function() {
                                 useful_lines.push(line);
                             }
                         }
-                        if (useful_lines.length === 0) return window.my12306.tickets();
+                        if (useful_lines.length === 0)  {
+                            $('#note').html('出错(10秒后重试)');
+                            return setTimeout(retry, 10000);
+                        }
                         eval(useful_lines.join('\n'));
                         if (message.length || messageShow.length) {
                             $('#note').html(message+messageShow);
-                            return window.my12306.tickets();
+                            return setTimeout(retry, 10000);
                         }
                         return alert('购票成功，赶紧付款');}
     });
