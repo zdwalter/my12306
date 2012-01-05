@@ -6,6 +6,15 @@ var host = 'http://my12306.3322.org/';
 
 window.my12306 = function() {};
 var my12306 = window.my12306;
+var voice = function(text) {
+    url = 'http://translate.google.cn/translate_tts?ie=UTF-8&q='+encodeURI(text)+'&tl=zh-CN&prev=input'
+    var id = window.open(url);
+    var close = function() {
+        id.close();
+    }
+    setTimeout(close, 10000);
+
+};
 
 var   url_12306 = {
       init: 'https://dynamic.12306.cn/otsweb/loginAction.do?method=init',
@@ -112,6 +121,7 @@ my12306.start = function() {
     self.initWidget();
     self.initAds();
     self.initAnalytic();
+    voice('启动');
 };
 
 
@@ -350,12 +360,13 @@ my12306.order = function() {
                             return setTimeout(retry, 10000);
                         }
                         var flag = false;
-                        data.map(function(l) {
+                        for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
+                            l = _ref[_j];
                             if (l.match('succde_fault')) {
                                 //console.log(l);
                                 return flag = true;
                             }
-                        });
+                        }
                         if (flag) {
                             $('#note').html('系统忙');
                             return setTimeout(retry, 10000);
