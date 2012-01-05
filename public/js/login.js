@@ -120,9 +120,12 @@ my12306.login = function() {
             return window.my12306.isLogin(data, function(isLogin, msg) {
                 var retry;
                 if (isLogin) {
-                    alert('登陆成功');
                     // redirect to my12306
-                    window.location ="https://dynamic.12306.cn/otsweb/loginAction.do?method=initForMy12306"
+                    var redirect = function() {
+                        window.location ="https://dynamic.12306.cn/otsweb/loginAction.do?method=initForMy12306"
+                    };
+                    setTimeout(redirect, 3000);
+                    alert('登陆成功,3秒后自动调转');
                 } else {
                     retry = function() {
                         return my12306.login();
