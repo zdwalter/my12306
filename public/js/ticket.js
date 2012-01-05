@@ -148,7 +148,7 @@ my12306.tickets = function() {
             html.split('\\n').map(function(t) {
                 if (t.match(">"+traincode+"<")) {
                     train = t;
-                    console.log('got:'+t);
+                    //console.log('got:'+t);
                 }
             });
             html = train;
@@ -165,11 +165,11 @@ my12306.tickets = function() {
             order_str = html.match(/getSelected\('([^']*)'\)/)[1];
             orders = order_str.split('#');
             data = html.replace(/<br>/g, '/').replace(/&nbsp;/g, '').replace(/<[^>]*>/g, '');
-            console.log(html);
-            console.log(data);
-            console.log(orders);
+            //console.log(html);
+            //console.log(data);
+            //console.log(orders);
             l = data.split(',');
-            console.log(l);
+            //console.log(l);
             piao = {
               '--': -1,
               '有': 21,
@@ -198,6 +198,7 @@ my12306.tickets = function() {
               'lishi': orders[1],
               'train_start_time': orders[2],
               'station_train_code': orders[3],
+              'train_no': orders[3],
               'ori_telcode': orders[4],
               'des_telcode': orders[5],
               'date': date,
@@ -252,12 +253,12 @@ my12306.ticket_confirm = function(ticket, callback) {
           },
           success: function(html) {
             var flag, retry;
-            console.log(html);
+            //console.log(html);
             data = html.split('\n');
             flag = false;
             data.map(function(l) {
               if (l.match('succde_fault')) {
-                console.log(l);
+                //console.log(l);
                 return flag = true;
               }
             });
@@ -281,22 +282,22 @@ my12306.order = function() {
     localStorage.setItem('name',name);
     html = my12306.html;
     passenger = html.match(/var passengerJson[^;]*;/)[0];
-    console.log(passenger);
+    //console.log(passenger);
     eval(passenger);
-    console.log(passengerJson);
+    //console.log(passengerJson);
     user = null;
     passengerJson.map(function(u) {
         if (u.passenger_name === name) {
-            console.log(u)
+            //console.log(u)
             user = u;
         }
     });
     var d, data, param, params, _i, _len;
     data = {};
     data['org.apache.struts.taglib.html.TOKEN'] = html.match('name="org\.apache\.struts\.taglib\.html\.TOKEN" value="([^>]*)">')[1];
-    console.log(data['org.apache.struts.taglib.html.TOKEN']);
+    //console.log(data['org.apache.struts.taglib.html.TOKEN']);
     params = html.match(/<input type="hidden" name="(orderRequest.[^"]*)" value="([^"]*)" id=".*?">/g);
-    console.log(params);
+    //console.log(params);
     for (_i = 0, _len = params.length; _i < _len; _i++) {
         param = params[_i];
         d = param.match(/<input type="hidden" name="(orderRequest.[^"]*)" value="([^"]*)" id=".*?">/);
@@ -305,8 +306,14 @@ my12306.order = function() {
     data['randCode'] = randCode;
     data['passengerTickets'] = "3,1," + user.passenger_name + ",1," + user.passenger_id_no + "," + user.mobile_no + ",N";
     data['orderRequest.reserve_flag'] = 'A';
-    data.train_no = my12306.ticket['station_train_code'];
-    console.log(data);
+    data['orderRequest.train_no'] = my12306.ticket['train_no'];
+    data.passenger_1_ticket = 1
+    data.passenger_1_name = user.passenger_name
+    data.passenger_1_cardtype = 1
+    data.passenger_1_cardno = user.passenger_id_no
+    data.passenger_1_mobileno = user.mobile_no        
+    data.passenger_1_seat = 1
+    //console.log(data);
     return $.ajax({
         url: url_12306.order,
            data: data,
