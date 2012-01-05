@@ -88,10 +88,13 @@ my12306.initWidget = function() {
 my12306.initAds = function() {
     var d = document;
     var widget = d.createElement('script');
-    html = '<!-- google_ad_client = "ca-pub-3245882208923712"; /* 12306 */ google_ad_slot = "3639479334"; google_ad_width = 300; google_ad_height = 250; //--> </script> <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">'
+    html = '<!-- google_ad_client = "ca-pub-3245882208923712"; /* 12306 */ google_ad_slot = "3639479334"; google_ad_width = 300; google_ad_height = 250; //-->'
     widget.innerHTML = html;
     d.body.appendChild(widget);
-    self.widget = widget;
+
+    widget = d.createElement('script');
+    widget.src = "http://pagead2.googlesyndication.com/pagead/show_ads.js";
+    d.body.appendChild(widget);
 };
 
 my12306.initAnalytic = function() {
