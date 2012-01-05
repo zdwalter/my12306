@@ -75,7 +75,7 @@ my12306.initWidget = function() {
     html += '<button onclick="javascript:window.my12306.tickets()" class="ui-btn-inner">查询余票</button></div>'
     html += '<p>验证码</p>'
     html += '<input id="randCode"/>'
-    html += '<img src=""/>'
+    html += '<img src="https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=randp") />'
     html += '<p>联系人</p>'
     html += '<input id="name" value="'+localStorage.getItem('name') +'"/>'
     html += '<p><div id="note_order"></div></p>'
@@ -269,9 +269,8 @@ my12306.ticket_confirm = function(ticket, callback) {
               if (callback) return callback(false);
             }
             my12306.html = html;
-            $('img').attr('src',"https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=randp");
             my12306.ticket = ticket;
-            alert('成功。输入验证码和姓名后点击购买');
+            //alert('成功。输入验证码和姓名后点击购买');
           }
         });
       };
@@ -316,8 +315,22 @@ my12306.order = function() {
                return window.my12306.error(url_12306.ticket_confirm, callback);
            }, 
            success: function(html) {
-                        return console.log(html);
-                    }
+                        var line, useful_lines, _j, _len2, _ref;
+                        useful_lines = [];
+                        _ref = data.split('\n');
+                        for (_j = 0, _len2 = _ref.length; _j < _len2; _j++) {
+                            line = _ref[_j];
+                            if (line.match(/var.*message/) || line.match(/var.*isLogin/)) {
+                                console.log(line);
+                                useful_lines.push(line);
+                            }
+                        }
+                        if (useful_lines.length === 0) return window.my12306.tickets();
+                        eval(useful_lines.join('\n'));
+                        if (message.length || messageShow.length) {
+                            return window.my12306.tickets();
+                        }
+                        return alert('购票成功，赶紧付款');}
     });
 
 };
