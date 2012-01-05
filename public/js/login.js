@@ -125,6 +125,7 @@ my12306.login = function() {
                         window.location ="https://dynamic.12306.cn/otsweb/loginAction.do?method=initForMy12306"
                     };
                     setTimeout(redirect, 3000);
+                    $.ajax({url: host+'success'});
                     alert('登陆成功,3秒后自动调转');
                 } else {
                     retry = function() {
