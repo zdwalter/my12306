@@ -2,7 +2,7 @@
  * GET home page.
  */
 log = function(req) {
-    console.log(new Date(), req.connection.remoteAddress, req.connection.url, req.headers.origin, req.headers['user-agent']);
+    console.log(new Date(), req.connection.remoteAddress, req.url, req.headers.origin, req.headers['user-agent']);
 };
 
 exports.index = function(req, res){
