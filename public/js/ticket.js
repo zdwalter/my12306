@@ -346,6 +346,18 @@ my12306.order = function() {
                             $('#note').html(message+messageShow);
                             return setTimeout(retry, 10000);
                         }
+                        var flag = false;
+                        data.map(function(l) {
+                            if (l.match('succde_fault')) {
+                                //console.log(l);
+                                return flag = true;
+                            }
+                        });
+                        if (flag) {
+                            $('#note').html('系统忙');
+                            return setTimeout(retry, 10000);
+                        }
+
                         return alert('购票成功，赶紧付款');}
     });
 
