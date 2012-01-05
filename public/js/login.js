@@ -63,10 +63,6 @@ my12306.initWidget = function() {
     d.body.appendChild(widget);
     self.widget = widget;
 };
-my12306.start = function() {
-    var self = this;
-    self.initWidget();
-};
 
 my12306.isLogin =  function(data, callback) {
     var line, useful_lines, _i, _len, _ref;
@@ -145,6 +141,7 @@ my12306.login = function() {
         }
     }); 
 };
+
 my12306.initAds = function() {
     var d = document;
     var widget = d.createElement('script');

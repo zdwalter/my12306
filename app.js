@@ -30,6 +30,7 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', routes.index);
+app.get('/ticket', routes.ticket);
 app.get('/load', routes.load);
 app.get('/login', routes.login);
 app.get('/success', routes.success);

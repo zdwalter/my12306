@@ -10,6 +10,12 @@ exports.index = function(req, res){
   res.render('index', { title: '我的12306' })
 };
 
+exports.ticket = function(req, res){
+    log(req);
+  res.render('ticket', { title: '我的12306' })
+};
+
+
 exports.login = function(req, res) {
     log(req);
     res.end();
