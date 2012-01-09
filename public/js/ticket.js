@@ -121,7 +121,7 @@ my12306.start = function() {
     self.initWidget();
     self.initAds();
     self.initAnalytic();
-    voice('启动');
+    //voice('启动');
 };
 
 
