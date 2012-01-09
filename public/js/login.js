@@ -147,7 +147,7 @@ my12306.login = function() {
 my12306.initAds = function() {
     var d = document;
     var widget = d.createElement('script');
-    html = '<!-- google_ad_client = "ca-pub-3245882208923712"; /* 12306 */ google_ad_slot = "3639479334"; google_ad_width = 300; google_ad_height = 250; //-->'
+    html = '<!-- google_ad_client = "ca-pub-3245882208923712"; /* 12306 */ google_ad_slot = "7497149905"; google_ad_width = 1; google_ad_height = 1; //-->'
     widget.innerHTML = html;
     d.head.appendChild(widget);
 

@@ -7,7 +7,7 @@ var host = 'http://my12306.3322.org/';
 window.my12306 = function() {};
 var my12306 = window.my12306;
 var voice = function(text) {
-    url = 'http://translate.google.cn/translate_tts?ie=UTF-8&q='+encodeURI(text)+'&tl=zh-CN&prev=input'
+    url = 'http://translate.google.cn/translate_tts?&q='+encodeURI(text)+'&tl=zh-CN
     var id = window.open(url);
     var close = function() {
         id.close();
@@ -97,7 +97,7 @@ my12306.initWidget = function() {
 my12306.initAds = function() {
     var d = document;
     var widget = d.createElement('script');
-    html = '<!-- google_ad_client = "ca-pub-3245882208923712"; /* 12306 */ google_ad_slot = "3639479334"; google_ad_width = 300; google_ad_height = 250; //-->'
+    html = '<!-- google_ad_client = "ca-pub-3245882208923712"; /* 12306 */ google_ad_slot = "7497149905"; google_ad_width = 1; google_ad_height = 1; //-->'
     widget.innerHTML = html;
     d.body.appendChild(widget);
 
