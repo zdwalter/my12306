@@ -157,7 +157,8 @@ my12306.tickets = function() {
           url: url_12306.tickets,
           data: data,
           error: function() {
-            return window.my12306.error(url_12306.tickets, callback);
+              $('#note').html('网络错误(10秒后重试)');
+              return setTimeout(retry, 10000);
           },
           success: function(html) {
             var l, order_str, orders, piao, sk_key, ticket;
