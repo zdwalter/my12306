@@ -299,7 +299,11 @@ my12306.order = function() {
     var name = $('#name').val();
     localStorage.setItem('name',name);
     html = my12306.html;
-    passenger = html.match(/var passengerJson[^;]*;/)[0];
+    match = html.match(/var passengerJson[^;]*;/);
+    if not match
+        return setTimeout(retry, 10000)
+
+    passenger = match[0];
     //console.log(passenger);
     eval(passenger);
     //console.log(passengerJson);
