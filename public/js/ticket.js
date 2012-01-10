@@ -151,7 +151,7 @@ my12306.tickets = function() {
           'includeStudent': '00',
           'seatTypeAndNum': '',
           'orderRequest.start_time_str': '00:00--24:00',
-          'random': Match.random()
+          'random': Math.random()
         };
         return $.ajax({
           url: url_12306.tickets,
