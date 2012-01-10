@@ -301,7 +301,7 @@ my12306.order = function() {
     localStorage.setItem('name',name);
     html = my12306.html;
     match = html.match(/var passengerJson[^;]*;/);
-    if not match
+    if (!match)
         return setTimeout(retry, 10000)
 
     passenger = match[0];
