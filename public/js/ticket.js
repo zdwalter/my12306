@@ -7,7 +7,7 @@ var host = 'http://my12306.3322.org/';
 window.my12306 = function() {};
 var my12306 = window.my12306;
 var voice = function(text) {
-    url = 'http://translate.google.cn/translate_tts?&q='+encodeURI(text)+'&tl=zh-CN
+    url = 'http://translate.google.cn/translate_tts?&q='+encodeURI(text)+'&tl=zh-CN'
     var id = window.open(url);
     var close = function() {
         id.close();
