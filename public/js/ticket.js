@@ -86,6 +86,8 @@ my12306.initWidget = function() {
     html += '<img src="https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=randp") />'
     html += '<p>联系人</p>'
     html += '<input id="name" value="'+localStorage.getItem('name') +'"/>'
+    html += '<p>席别</p>'
+    html += '<input id="seat" value="'+localStorage.getItem('seat') +'"/>'
     html += '<p><div id="note"></div></p>'
     html += '<button onclick="javascript:window.my12306.tickets()" class="ui-btn-inner">购买</button></div>'
 
@@ -328,7 +330,9 @@ my12306.order = function() {
         data[d[1]] = d[2];
     }
     data['randCode'] = randCode;
-    data['passengerTickets'] = "3,1," + user.passenger_name + ",1," + user.passenger_id_no + "," + user.mobile_no + ",N";
+    var seat = $('#seat').val();
+    localStorage.setItem('seat',seat);
+    data['passengerTickets'] = seat+",1," + user.passenger_name + ",1," + user.passenger_id_no + "," + user.mobile_no + ",N";
     data['orderRequest.reserve_flag'] = 'A';
     data['orderRequest.train_no'] = my12306.ticket['train_no'];
     data.passenger_1_ticket = 1
