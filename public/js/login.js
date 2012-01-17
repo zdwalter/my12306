@@ -57,7 +57,7 @@ my12306.initWidget = function() {
     html += '<img src="https://dynamic.12306.cn/otsweb/passCodeAction.do?rand=lrand"/>'
     html += '<p><div id="note"></div></p>'
     html += '</div>'
-    html += '<button onclick="javascript:window.my12306.login()" class="ui-btn-inner">登录</button></div>'
+    html += '<button onclick="javascript:window.my12306.login()" class="ui-btn-inner">自动登录</button></div>'
 
     widget.innerHTML = html;
     d.body.appendChild(widget);
